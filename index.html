@@ -117,7 +117,7 @@
 
       try {
         const imgElement = document.getElementById('generatedImage');
-        const newUrl = `https://thispersondoesnotexist.com?${new Date().getTime()}`; // Cache-busting URL
+        const newUrl = `https://thispersondoesnotexist.com/image?${new Date().getTime()}`; // Cache-busting URL
         imgElement.src = newUrl; // Set the new image source
         currentImageUrl = newUrl; // Update the current image URL
       } catch (error) {
@@ -128,27 +128,21 @@
       }
     }
 
-    async function downloadImage() {
+    function downloadImage() {
       try {
-        if (!currentImageUrl) {
+        const imgElement = document.getElementById('generatedImage');
+
+        if (!imgElement.src) {
           alert('No image available to download. Please generate one first.');
           return;
         }
 
-        const response = await fetch(currentImageUrl, { cache: 'no-store' });
-        if (!response.ok) {
-          throw new Error('Failed to fetch the image.');
-        }
-
-        const blob = await response.blob();
-        const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
-        a.href = url;
+        a.href = imgElement.src; // Use the current displayed image source
         a.download = `ai-generated-person-${Date.now()}.jpg`;
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
-        URL.revokeObjectURL(url); // Clean up the URL
       } catch (error) {
         console.error('Error downloading the image:', error);
         alert('Failed to download the image. Please try again.');
