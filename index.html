@@ -263,7 +263,7 @@
     <div class="features-panel">
       <div class="image-controls">
         <button class="control-btn" onclick="copyImageLink()">
-          <i class="fas fa-link"></i> Copy Image Link
+          <i class="fas fa-link"></i> Copy Website Link
         </button>
       </div>
 
@@ -389,27 +389,27 @@
     }
 
     function copyImageLink() {
-      const imageUrl = document.getElementById('generatedImage').src;
-      navigator.clipboard.writeText(imageUrl).then(() => {
-        alert('Image link copied to clipboard!');
+      const websiteUrl = "https://thispersonnotexist.github.io/Home/";
+      navigator.clipboard.writeText(websiteUrl).then(() => {
+        alert('Website link copied to clipboard!');
       });
     }
 
     function shareOnTwitter() {
-      const imageUrl = document.getElementById('generatedImage').src;
+      const websiteUrl = "https://thispersonnotexist.github.io/Home/";
       const text = "Check out this AI-generated face that doesn't exist in reality!";
-      window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(imageUrl)}`, '_blank');
+      window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(websiteUrl)}`, '_blank');
     }
 
     function shareOnFacebook() {
-      const imageUrl = document.getElementById('generatedImage').src;
-      window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(imageUrl)}`, '_blank');
+      const websiteUrl = "https://thispersonnotexist.github.io/Home/";
+      window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(websiteUrl)}`, '_blank');
     }
 
     function shareOnPinterest() {
-      const imageUrl = document.getElementById('generatedImage').src;
+      const websiteUrl = "https://thispersonnotexist.github.io/Home/";
       const description = "AI-generated face that doesn't exist in reality";
-      window.open(`https://pinterest.com/pin/create/button/?url=${encodeURIComponent(imageUrl)}&media=${encodeURIComponent(imageUrl)}&description=${encodeURIComponent(description)}`, '_blank');
+      window.open(`https://pinterest.com/pin/create/button/?url=${encodeURIComponent(websiteUrl)}&description=${encodeURIComponent(description)}`, '_blank');
     }
 
     window.onload = () => {
