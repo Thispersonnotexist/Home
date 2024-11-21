@@ -117,11 +117,6 @@
     color: white;
   }
 
-  .download-btn {
-    background: linear-gradient(135deg, #11998e, #38ef7d);
-    color: white;
-  }
-
   button:hover {
     transform: translateY(-3px);
     box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
@@ -231,15 +226,6 @@
     background: #E60023;
   }
 
-  .image-stats {
-    background: rgba(255, 255, 255, 0.9);
-    padding: 0.5rem;
-    border-radius: 8px;
-    margin-top: 1rem;
-    font-size: 0.9rem;
-    color: #666;
-  }
-
   .footer {
     margin-top: 2rem;
     padding: 1rem;
@@ -292,15 +278,10 @@
           <i class="fab fa-pinterest"></i> Pin
         </button>
       </div>
-
-      <div class="image-stats">
-        <span>Downloads: <span id="downloadCount">0</span></span>
-      </div>
     </div>
 
     <div class="buttons">
       <button class="generate-btn" onclick="generateNewImage()">Generate New Face</button>
-      <button class="download-btn" onclick="downloadImage()">Download Image</button>
     </div>
 
     <div class="info">
@@ -319,7 +300,7 @@
   </div>
 
   <script>
-    let downloadCount = 0;
+    let currentImageUrl = ''; // Track current displayed image URL
     let preloadedImage = null;
     let isGenerating = false;
     const TIMEOUT_DURATION = 5000; // 5 seconds timeout
@@ -342,7 +323,7 @@
         return new Promise((resolve, reject) => {
             const img = new Image();
             const timeoutId = setTimeout(() => {
-                reject(new Error('Image loading timed out'));
+                reject(new Error('Image preloading timed out'));
             }, TIMEOUT_DURATION);
 
             img.onload = () => {
@@ -353,10 +334,11 @@
 
             img.onerror = () => {
                 clearTimeout(timeoutId);
-                reject(new Error('Failed to load image'));
+                reject(new Error('Failed to preload image'));
             };
 
-            img.src = `https://thispersondoesnotexist.com?${new Date().getTime()}&w=1600&h=900&q=100`;
+            const cacheBuster = new Date().getTime();
+            img.src = `https://thispersondoesnotexist.com?${cacheBuster}&w=1600&h=900&q=100`;
         });
     }
 
@@ -370,60 +352,40 @@
             
             if (preloadedImage) {
                 img.src = preloadedImage;
+                currentImageUrl = preloadedImage; // Store current image URL
                 preloadedImage = null;
                 
+                // Start preloading next image
                 preloadNextImage().catch(console.error);
                 
                 hideLoading();
-                updateStats();
             } else {
                 const timeoutPromise = new Promise((_, reject) => {
                     setTimeout(() => reject(new Error('Timeout')), TIMEOUT_DURATION);
                 });
 
+                const newUrl = `https://thispersondoesnotexist.com?${new Date().getTime()}&w=1600&h=900&q=100`;
                 const loadPromise = new Promise((resolve) => {
-                    img.onload = () => resolve();
-                    // Add cache-busting and quality parameters
-                    img.src = `https://thispersondoesnotexist.com?${new Date().getTime()}&w=1600&h=900&q=100`;
+                    img.onload = () => {
+                        currentImageUrl = newUrl; // Store current image URL
+                        resolve();
+                    };
+                    img.src = newUrl;
                 });
 
                 await Promise.race([loadPromise, timeoutPromise]);
                 hideLoading();
-                updateStats();
                 
+                // Start preloading next image
                 preloadNextImage().catch(console.error);
             }
         } catch (error) {
             console.error('Error generating image:', error);
             hideLoading();
-            alert('Image generation timed out. Please try again.');
+            alert('Image generation failed. Please try again.');
         } finally {
             isGenerating = false;
         }
-    }
-
-    async function downloadImage() {
-      try {
-        const response = await fetch(document.getElementById('generatedImage').src);
-        const blob = await response.blob();
-        const url = window.URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `ai-generated-person-${new Date().getTime()}.jpg`;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        window.URL.revokeObjectURL(url);
-        downloadCount++;
-        updateStats();
-      } catch (error) {
-        console.error('Error downloading image:', error);
-        alert('Error downloading image. Please try again.');
-      }
-    }
-
-    function updateStats() {
-      document.getElementById('downloadCount').textContent = downloadCount;
     }
 
     function copyImageLink() {
