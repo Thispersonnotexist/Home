@@ -1,156 +1,58 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AI Generated People - Unique Faces that Don't Exist</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-  <style>
-    /* Basic styling for the page */
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    body {
-      font-family: 'Inter', sans-serif;
-      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-    }
-
-    h1 {
-      font-size: 2.5rem;
-      color: #1a1a1a;
-      margin-bottom: 1rem;
-    }
-
-    .subtitle {
-      color: #444;
-      margin-bottom: 2rem;
-    }
-
-    .image-container {
-      background: white;
-      padding: 1.5rem;
-      border-radius: 16px;
-      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-      position: relative;
-      width: 100%;
-      max-width: 800px;
-    }
-
-    .generated-image {
-      width: 100%;
-      aspect-ratio: 16/9;
-      border-radius: 12px;
-      object-fit: cover;
-    }
-
-    .buttons {
-      display: flex;
-      gap: 1.5rem;
-      justify-content: center;
-      margin-top: 1.5rem;
-    }
-
-    button {
-      padding: 1rem 2rem;
-      font-size: 1.1rem;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      font-weight: 600;
-      color: white;
-      transition: all 0.3s ease;
-    }
-
-    .generate-btn {
-      background: linear-gradient(135deg, #4e54c8, #8f94fb);
-    }
-
-    .download-btn {
-      background: linear-gradient(135deg, #11998e, #38ef7d);
-    }
-
-    button:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
-    }
-
-    .footer {
-      margin-top: 2rem;
-      color: #666;
-      font-size: 0.9rem;
-    }
-  </style>
-</head>
-<body>
-  <h1>AI Generated People</h1>
-  <p class="subtitle">Explore unique, AI-generated faces that don't exist in reality.</p>
-
-  <div class="image-container">
-    <img id="generatedImage" class="generated-image" alt="AI generated person" src="" />
-  </div>
-
-  <div class="buttons">
-    <button class="generate-btn" onclick="generateNewImage()">Generate New Face</button>
-    <button class="download-btn" onclick="downloadImage()">Download Image</button>
-  </div>
-
-  <div class="footer">
-    <p>All faces are computer-generated and do not represent real people.</p>
-  </div>
-
-  <script>
-    let currentImageUrl = ''; // To track the currently displayed image
-    let isGenerating = false; // Prevent multiple simultaneous requests
-
-    async function generateNewImage() {
-      if (isGenerating) return; // Prevent duplicate generation
-      isGenerating = true;
-
-      try {
-        const imgElement = document.getElementById('generatedImage');
-        const newUrl = `https://thispersondoesnotexist.com/image?${new Date().getTime()}`; // Cache-busting URL
-        imgElement.src = newUrl; // Set the new image source
-        currentImageUrl = newUrl; // Update the current image URL
-      } catch (error) {
-        console.error('Error generating image:', error);
-        alert('Failed to generate a new image. Please try again.');
-      } finally {
-        isGenerating = false; // Reset generating status
-      }
-    }
-
-    function downloadImage() {
-      try {
-        const imgElement = document.getElementById('generatedImage');
-
-        if (!imgElement.src) {
-          alert('No image available to download. Please generate one first.');
-          return;
-        }
-
-        const a = document.createElement('a');
-        a.href = imgElement.src; // Use the current displayed image source
-        a.download = `ai-generated-person-${Date.now()}.jpg`;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-      } catch (error) {
-        console.error('Error downloading the image:', error);
-        alert('Failed to download the image. Please try again.');
-      }
-    }
-
-    // Initialize with the first image on load
-    window.onload = generateNewImage;
+<!-- Banner Ad placement at the top -->
+<div class="ad-banner-container">
+  <script type="text/javascript">
+    atOptions = {
+      'key' : '9d35a666d6030fb28c2e0b1fc3433821',
+      'format' : 'iframe',
+      'height' : 90,
+      'width' : 728,
+      'params' : {}
+    };
   </script>
-</body>
-</html>
+  <script type="text/javascript" src="//www.highperformanceformat.com/9d35a666d6030fb28c2e0b1fc3433821/invoke.js"></script>
+</div>
+
+<div class="image-container">
+  <img id="generatedImage" class="generated-image" alt="AI generated person portrait - a unique face that doesn't exist in reality" src="https://thispersondoesnotexist.com" width="800" height="450">
+  <div id="loadingOverlay" class="loading-overlay">
+    <div class="spinner"></div>
+  </div>
+</div>
+
+<div class="features-panel">
+  <div class="image-controls">
+    <button class="control-btn" onclick="copyImageLink()">
+      <i class="fas fa-link"></i> Copy Image Link
+    </button>
+  </div>
+
+  <div class="share-buttons">
+    <button class="share-btn twitter" onclick="shareOnTwitter()">
+      <i class="fab fa-twitter"></i> Tweet
+    </button>
+    <button class="share-btn facebook" onclick="shareOnFacebook()">
+      <i class="fab fa-facebook"></i> Share
+    </button>
+    <button class="share-btn pinterest" onclick="shareOnPinterest()">
+      <i class="fab fa-pinterest"></i> Pin
+    </button>
+  </div>
+
+  <div class="image-stats">
+    <span>Downloads: <span id="downloadCount">0</span></span>
+  </div>
+</div>
+
+<div class="buttons">
+  <button class="generate-btn" onclick="generateNewImage()">Generate New Face</button>
+  <button class="download-btn" onclick="downloadImage()">Download Image</button>
+</div>
+
+<div class="info">
+  <h3>About These Images</h3>
+  <p>Every face you see here is created by artificial intelligence and represents no real person. These images span across different ages, ethnicities, and styles - all uniquely generated and free for personal or commercial use. Each refresh brings a new, never-before-seen face into existence.</p>
+</div>
+
+<div class="footer">
+  <p>Images generated using AI technology. All faces are computer-generated and do not represent real people.</p>
+</div>
