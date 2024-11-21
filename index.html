@@ -1,491 +1,162 @@
-<html><head><base href="." />
-<meta charset="UTF-8">
-<title>AI Generated People - Unique Faces that Don't Exist</title>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-<style>
-  * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-  }
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Generated People - Unique Faces that Don't Exist</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <style>
+    /* Basic styling for the page */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
-  body {
-    font-family: 'Inter', sans-serif;
-    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
 
-  .container {
-    max-width: 800px;
-    margin: 2rem auto;
-    padding: 0 1rem;
-    text-align: center;
-  }
+    h1 {
+      font-size: 2.5rem;
+      color: #1a1a1a;
+      margin-bottom: 1rem;
+    }
 
-  h1 {
-    font-size: 2.5rem;
-    color: #1a1a1a;
-    margin-bottom: 1rem;
-    text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
-  }
+    .subtitle {
+      color: #444;
+      margin-bottom: 2rem;
+    }
 
-  .subtitle {
-    color: #444;
-    margin-bottom: 2rem;
-    font-size: 1.1rem;
-  }
+    .image-container {
+      background: white;
+      padding: 1.5rem;
+      border-radius: 16px;
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+      position: relative;
+      width: 100%;
+      max-width: 800px;
+    }
 
-  .image-container {
-    background: white;
-    padding: 1.5rem;
-    border-radius: 16px;
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-    margin-bottom: 2rem;
-    position: relative;
-    transition: transform 0.3s ease;
-    width: 100%;
-    max-width: 800px; /* Increased to accommodate wider 16:9 image */
-  }
+    .generated-image {
+      width: 100%;
+      aspect-ratio: 16/9;
+      border-radius: 12px;
+      object-fit: cover;
+    }
 
-  .image-container:hover {
-    transform: translateY(-5px);
-  }
+    .buttons {
+      display: flex;
+      gap: 1.5rem;
+      justify-content: center;
+      margin-top: 1.5rem;
+    }
 
-  .generated-image {
-    width: 100%;
-    height: auto;
-    aspect-ratio: 16/9;
-    border-radius: 12px;
-    object-fit: cover;
-    max-width: 100%;
-  }
+    button {
+      padding: 1rem 2rem;
+      font-size: 1.1rem;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      color: white;
+      transition: all 0.3s ease;
+    }
 
-  .loading-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(255, 255, 255, 0.95);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border-radius: 16px;
-    backdrop-filter: blur(5px);
-    opacity: 0;
-    transition: opacity 0.2s ease-out;
-    pointer-events: none;
-  }
+    .generate-btn {
+      background: linear-gradient(135deg, #4e54c8, #8f94fb);
+    }
 
-  .loading-overlay.visible {
-    opacity: 1;
-    pointer-events: auto;
-  }
+    .download-btn {
+      background: linear-gradient(135deg, #11998e, #38ef7d);
+    }
 
-  .spinner {
-    width: 60px;
-    height: 60px;
-    border: 6px solid #f3f3f3;
-    border-top: 6px solid #3498db;
-    border-radius: 50%;
-    animation: spin 0.8s linear infinite;
-    will-change: transform;
-  }
+    button:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+    }
 
-  .buttons {
-    display: flex;
-    gap: 1.5rem;
-    justify-content: center;
-    margin-bottom: 2rem;
-  }
-
-  button {
-    padding: 1rem 2rem;
-    font-size: 1.1rem;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    font-weight: 600;
-  }
-
-  .generate-btn {
-    background: linear-gradient(135deg, #4e54c8, #8f94fb);
-    color: white;
-  }
-
-  .download-btn {
-    background: linear-gradient(135deg, #11998e, #38ef7d);
-    color: white;
-  }
-
-  button:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
-  }
-
-  .info {
-    max-width: 600px;
-    margin: 0 auto;
-    padding: 1.5rem;
-    background: white;
-    border-radius: 12px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-    line-height: 1.6;
-  }
-
-  .info h3 {
-    color: #333;
-    margin-bottom: 1rem;
-  }
-
-  @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-  }
-
-  /* Additional styles for ads */
-  .ad-banner-container {
-    width: 100%;
-    max-width: 728px;
-    margin: 2rem auto;
-    display: flex;
-    justify-content: center;
-    background: rgba(255, 255, 255, 0.9);
-    padding: 1rem;
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-  }
-
-  .social-bar-container {
-    position: fixed;
-    left: 0;
-    top: 50%;
-    transform: translateY(-50%);
-    z-index: 1000;
-  }
-
-  .features-panel {
-    background: white;
-    padding: 1.5rem;
-    border-radius: 12px;
-    margin: 2rem 0;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-  }
-
-  .image-controls {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1rem;
-    margin: 1rem 0;
-    justify-content: center;
-  }
-
-  .control-btn {
-    padding: 0.5rem 1rem;
-    background: #f0f2f5;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    transition: all 0.3s ease;
-  }
-
-  .control-btn:hover {
-    background: #e4e6e9;
-  }
-
-  .share-buttons {
-    display: flex;
-    gap: 1rem;
-    justify-content: center;
-    margin: 1rem 0;
-  }
-
-  .share-btn {
-    padding: 0.5rem 1rem;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    color: white;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    transition: all 0.3s ease;
-  }
-
-  .share-btn.twitter {
-    background: #1DA1F2;
-  }
-
-  .share-btn.facebook {
-    background: #4267B2;
-  }
-
-  .share-btn.pinterest {
-    background: #E60023;
-  }
-
-  .image-stats {
-    background: rgba(255, 255, 255, 0.9);
-    padding: 0.5rem;
-    border-radius: 8px;
-    margin-top: 1rem;
-    font-size: 0.9rem;
-    color: #666;
-  }
-
-  .footer {
-    margin-top: 2rem;
-    padding: 1rem;
-    text-align: center;
-    color: #666;
-  }
-</style>
+    .footer {
+      margin-top: 2rem;
+      color: #666;
+      font-size: 0.9rem;
+    }
+  </style>
 </head>
 <body>
-  <div class="container">
-    <h1>AI Generated People</h1>
-    <p class="subtitle">Explore unique, AI-generated faces that don't exist in reality - Free for any use!</p>
+  <h1>AI Generated People</h1>
+  <p class="subtitle">Explore unique, AI-generated faces that don't exist in reality.</p>
 
-    <!-- Banner Ad placement at the top -->
-    <div class="ad-banner-container">
-      <script type="text/javascript">
-        atOptions = {
-          'key' : '9d35a666d6030fb28c2e0b1fc3433821',
-          'format' : 'iframe',
-          'height' : 90,
-          'width' : 728,
-          'params' : {}
-        };
-      </script>
-      <script type="text/javascript" src="//www.highperformanceformat.com/9d35a666d6030fb28c2e0b1fc3433821/invoke.js"></script>
-    </div>
-
-    <div class="image-container">
-      <img id="generatedImage" class="generated-image" alt="AI generated person portrait - a unique face that doesn't exist in reality" src="https://thispersondoesnotexist.com" width="800" height="450">
-      <div id="loadingOverlay" class="loading-overlay">
-        <div class="spinner"></div>
-      </div>
-    </div>
-
-    <div class="features-panel">
-      <div class="image-controls">
-        <button class="control-btn" onclick="copyImageLink()">
-          <i class="fas fa-link"></i> Copy Image Link
-        </button>
-      </div>
-
-      <div class="share-buttons">
-        <button class="share-btn twitter" onclick="shareOnTwitter()">
-          <i class="fab fa-twitter"></i> Tweet
-        </button>
-        <button class="share-btn facebook" onclick="shareOnFacebook()">
-          <i class="fab fa-facebook"></i> Share
-        </button>
-        <button class="share-btn pinterest" onclick="shareOnPinterest()">
-          <i class="fab fa-pinterest"></i> Pin
-        </button>
-      </div>
-
-      <div class="image-stats">
-        <span>Downloads: <span id="downloadCount">0</span></span>
-      </div>
-    </div>
-
-    <div class="buttons">
-      <button class="generate-btn" onclick="generateNewImage()">Generate New Face</button>
-      <button class="download-btn" onclick="downloadImage()">Download Image</button>
-    </div>
-
-    <div class="info">
-      <h3>About These Images</h3>
-      <p>Every face you see here is created by artificial intelligence and represents no real person. These images span across different ages, ethnicities, and styles - all uniquely generated and free for personal or commercial use. Each refresh brings a new, never-before-seen face into existence.</p>
-    </div>
-
-    <div class="footer">
-      <p>Images generated using AI technology. All faces are computer-generated and do not represent real people.</p>
-    </div>
+  <div class="image-container">
+    <img id="generatedImage" class="generated-image" alt="AI generated person" src="" />
   </div>
 
-  <!-- Social Bar Ad placement -->
-  <div class="social-bar-container">
-    <script type='text/javascript' src='//pl25036733.profitablecpmrate.com/a6/e0/f0/a6e0f0fd511626fb6ef08fbd3bd4d79f.js'></script>
+  <div class="buttons">
+    <button class="generate-btn" onclick="generateNewImage()">Generate New Face</button>
+    <button class="download-btn" onclick="downloadImage()">Download Image</button>
+  </div>
+
+  <div class="footer">
+    <p>All faces are computer-generated and do not represent real people.</p>
   </div>
 
   <script>
-    let currentImageUrl = ''; // Track current displayed image URL
-    let downloadCount = 0;
-    let preloadedImage = null;
-    let isGenerating = false;
-    const TIMEOUT_DURATION = 5000; // 5 seconds timeout
-
-    function showLoading() {
-        const loadingOverlay = document.getElementById('loadingOverlay');
-        if (loadingOverlay) {
-            loadingOverlay.classList.add('visible');
-        }
-    }
-
-    function hideLoading() {
-        const loadingOverlay = document.getElementById('loadingOverlay');
-        if (loadingOverlay) {
-            loadingOverlay.classList.remove('visible');
-        }
-    }
-
-    function preloadNextImage() {
-        return new Promise((resolve, reject) => {
-            const img = new Image();
-            const timeoutId = setTimeout(() => {
-                reject(new Error('Image preloading timed out'));
-            }, TIMEOUT_DURATION);
-
-            img.onload = () => {
-                clearTimeout(timeoutId);
-                preloadedImage = img.src;
-                resolve(img.src);
-            };
-
-            img.onerror = () => {
-                clearTimeout(timeoutId);
-                reject(new Error('Failed to preload image'));
-            };
-
-            const cacheBuster = new Date().getTime();
-            img.src = `https://thispersondoesnotexist.com?${cacheBuster}&w=1600&h=900&q=100`;
-        });
-    }
+    let currentImageUrl = ''; // To track the currently displayed image
+    let isGenerating = false; // Prevent multiple simultaneous requests
 
     async function generateNewImage() {
-        if (isGenerating) return;
-        isGenerating = true;
-        showLoading();
+      if (isGenerating) return; // Prevent duplicate generation
+      isGenerating = true;
 
-        try {
-            const img = document.getElementById('generatedImage');
-            
-            if (preloadedImage) {
-                img.src = preloadedImage;
-                currentImageUrl = preloadedImage; // Store current image URL
-                preloadedImage = null;
-                
-                // Start preloading next image
-                preloadNextImage().catch(console.error);
-                
-                hideLoading();
-                updateStats();
-            } else {
-                const timeoutPromise = new Promise((_, reject) => {
-                    setTimeout(() => reject(new Error('Timeout')), TIMEOUT_DURATION);
-                });
-
-                const newUrl = `https://thispersondoesnotexist.com?${new Date().getTime()}&w=1600&h=900&q=100`;
-                const loadPromise = new Promise((resolve) => {
-                    img.onload = () => {
-                        currentImageUrl = newUrl; // Store current image URL
-                        resolve();
-                    };
-                    img.src = newUrl;
-                });
-
-                await Promise.race([loadPromise, timeoutPromise]);
-                hideLoading();
-                updateStats();
-                
-                // Start preloading next image
-                preloadNextImage().catch(console.error);
-            }
-        } catch (error) {
-            console.error('Error generating image:', error);
-            hideLoading();
-            alert('Image generation failed. Please try again.');
-        } finally {
-            isGenerating = false;
-        }
+      try {
+        const imgElement = document.getElementById('generatedImage');
+        const newUrl = `https://thispersondoesnotexist.com?${new Date().getTime()}`; // Cache-busting URL
+        imgElement.src = newUrl; // Set the new image source
+        currentImageUrl = newUrl; // Update the current image URL
+      } catch (error) {
+        console.error('Error generating image:', error);
+        alert('Failed to generate a new image. Please try again.');
+      } finally {
+        isGenerating = false; // Reset generating status
+      }
     }
 
     async function downloadImage() {
+      try {
         if (!currentImageUrl) {
-            alert('Please wait for an image to load before downloading.');
-            return;
+          alert('No image available to download. Please generate one first.');
+          return;
         }
 
-        try {
-            showLoading();
-            const response = await fetch(currentImageUrl, {
-                cache: 'no-store',
-                mode: 'cors',
-                headers: {
-                    'Cache-Control': 'no-cache'
-                }
-            });
-
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-
-            const blob = await response.blob();
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `ai-generated-person-${new Date().getTime()}.jpg`;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
-            
-            downloadCount++;
-            updateStats();
-        } catch (error) {
-            console.error('Error downloading image:', error);
-            alert('Failed to download the image. Please try again.');
-        } finally {
-            hideLoading();
+        const response = await fetch(currentImageUrl, { cache: 'no-store' });
+        if (!response.ok) {
+          throw new Error('Failed to fetch the image.');
         }
+
+        const blob = await response.blob();
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `ai-generated-person-${Date.now()}.jpg`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url); // Clean up the URL
+      } catch (error) {
+        console.error('Error downloading the image:', error);
+        alert('Failed to download the image. Please try again.');
+      }
     }
 
-    function updateStats() {
-      document.getElementById('downloadCount').textContent = downloadCount;
-    }
-
-    function copyImageLink() {
-      const imageUrl = document.getElementById('generatedImage').src;
-      navigator.clipboard.writeText(imageUrl).then(() => {
-        alert('Image link copied to clipboard!');
-      });
-    }
-
-    function shareOnTwitter() {
-      const imageUrl = document.getElementById('generatedImage').src;
-      const text = "Check out this AI-generated face that doesn't exist in reality!";
-      window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(imageUrl)}`, '_blank');
-    }
-
-    function shareOnFacebook() {
-      const imageUrl = document.getElementById('generatedImage').src;
-      window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(imageUrl)}`, '_blank');
-    }
-
-    function shareOnPinterest() {
-      const imageUrl = document.getElementById('generatedImage').src;
-      const description = "AI-generated face that doesn't exist in reality";
-      window.open(`https://pinterest.com/pin/create/button/?url=${encodeURIComponent(imageUrl)}&media=${encodeURIComponent(imageUrl)}&description=${encodeURIComponent(description)}`, '_blank');
-    }
-
-    window.onload = () => {
-        generateNewImage();
-        // Start preloading the next image immediately
-        preloadNextImage().catch(console.error);
-    };
+    // Initialize with the first image on load
+    window.onload = generateNewImage;
   </script>
-
-  <!-- Popunder Ad Script -->
-  <script type='text/javascript' src='//pl25036726.profitablecpmrate.com/d5/fa/73/d5fa73f6631e9aba13ec0884c568f196.js'></script>
 </body>
 </html>
