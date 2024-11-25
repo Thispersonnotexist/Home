@@ -1,5 +1,23 @@
 <html><head><base href="." />
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="description" content="Generate unique AI faces that don't exist in reality. Free to use AI-generated people, portraits, and faces for any project. No attribution required.">
+<meta name="keywords" content="AI generated faces, this person does not exist, artificial intelligence portraits, fake faces, synthetic faces, AI face generator, free AI faces, computer generated people, AI portraits, machine learning faces, realistic fake people, AI generated humans, synthetic portraits, AI face creation, deep learning faces, artificial people generator, GAN faces, StyleGAN faces, digital human faces, fake person generator">
+<meta name="author" content="https://thispersonnotexist.github.io/Home">
+<meta name="robots" content="index, follow">
+<meta property="og:title" content="AI Generated People - Unique Faces that Don't Exist">
+<meta property="og:description" content="Generate unique AI faces that don't exist in reality. Free to use AI-generated people and portraits for any project.">
+<meta property="og:image" content="https://thispersondoesnotexist.com">
+<meta property="og:url" content="https://thispersonnotexist.github.io/Home">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="AI Generated People - Unique Faces that Don't Exist">
+<meta name="twitter:description" content="Generate unique AI faces that don't exist in reality. Free to use AI-generated people and portraits for any project.">
+<meta name="twitter:image" content="https://thispersondoesnotexist.com">
+<meta name="language" content="English">
+<meta name="revisit-after" content="7 days">
+<meta name="theme-color" content="#4e54c8">
+<link rel="canonical" href="https://thispersonnotexist.github.io/Home">
 <title>AI Generated People - Unique Faces that Don't Exist</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 <style>
@@ -23,6 +41,7 @@
     margin: 2rem auto;
     padding: 0 1rem;
     text-align: center;
+    width: 100%;
   }
 
   h1 {
@@ -40,14 +59,14 @@
 
   .image-container {
     background: white;
-    padding: 1.5rem;
+    padding: 1rem; /* Reduced padding for mobile */
     border-radius: 16px;
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
     margin-bottom: 2rem;
     position: relative;
     transition: transform 0.3s ease;
     width: 100%;
-    max-width: 800px; /* Increased to accommodate wider 16:9 image */
+    max-width: 100%; /* Changed from fixed 800px */
   }
 
   .image-container:hover {
@@ -61,6 +80,7 @@
     border-radius: 12px;
     object-fit: cover;
     max-width: 100%;
+    display: block; /* Ensures no extra space below image */
   }
 
   .loading-overlay {
@@ -150,7 +170,7 @@
     display: flex;
     justify-content: center;
     background: rgba(255, 255, 255, 0.9);
-    padding: 1rem;
+    padding: 0.5rem; /* Updated padding for mobile */
     border-radius: 8px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
   }
@@ -231,6 +251,57 @@
     padding: 1rem;
     text-align: center;
     color: #666;
+  }
+
+  /* Add responsive styles for different screen sizes */
+  @media screen and (max-width: 768px) {
+    h1 {
+      font-size: 2rem;
+      padding: 0 1rem;
+    }
+
+    .subtitle {
+      font-size: 1rem;
+      padding: 0 1rem;
+    }
+
+    .buttons {
+      flex-direction: column;
+      gap: 1rem;
+      padding: 0 1rem;
+    }
+
+    .image-controls {
+      flex-direction: column;
+      padding: 0 1rem;
+    }
+
+    .share-buttons {
+      flex-wrap: wrap;
+      padding: 0 1rem;
+    }
+  }
+
+  @media screen and (max-width: 480px) {
+    .container {
+      margin: 1rem auto;
+    }
+
+    h1 {
+      font-size: 1.75rem;
+    }
+
+    .image-container {
+      padding: 0.5rem;
+    }
+
+    .features-panel {
+      padding: 1rem;
+    }
+
+    .social-bar-container {
+      display: none; /* Hide social bar on mobile */
+    }
   }
 </style>
 </head>
@@ -417,6 +488,31 @@
         // Start preloading the next image immediately
         preloadNextImage().catch(console.error);
     };
+
+    window.addEventListener('orientationchange', function() {
+      // Small delay to let the orientation change complete
+      setTimeout(() => {
+        const img = document.getElementById('generatedImage');
+        if (img) {
+          // Force refresh of image sizing
+          img.style.display = 'none';
+          setTimeout(() => {
+            img.style.display = 'block';
+          }, 10);
+        }
+      }, 100);
+    });
+
+    // Add resize handler to maintain aspect ratio
+    window.addEventListener('resize', function() {
+      const img = document.getElementById('generatedImage');
+      if (img) {
+        const container = img.parentElement;
+        const width = container.offsetWidth;
+        const height = width * (9/16); // Maintain 16:9 aspect ratio
+        img.style.height = `${height}px`;
+      }
+    });
   </script>
 
   <!-- Popunder Ad Script -->
